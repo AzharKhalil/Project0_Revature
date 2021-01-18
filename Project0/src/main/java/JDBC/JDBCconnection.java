@@ -2,20 +2,24 @@ package JDBC;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.util.Properties;
 
 public class JDBCconnection {
 
 	private static Connection conn = null;
 	public static Connection getConnection() {
+		
+		Properties pros = new Properties();
+		
 		try {
 			
 			if(conn == null) {
 				
 				Class.forName("oracle.jdbc.driver.OracleDriver");
-				String endpoint = "revature-projects.cr4e7pifzmvz.us-east-1.rds.amazonaws.com";
-				String url = "jdbc:oracle:thin:@" + endpoint + ":1521:ORCL";
-				String username = "azhar";
-				String password = "azhar1234";
+				
+				String url = pros.getProperty("url");
+				String username = pros.getProperty("userName");
+				String password = pros.getProperty("password");
 				
 				conn = DriverManager.getConnection(url, username, password);
 				return conn;

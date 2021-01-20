@@ -1,11 +1,13 @@
 package dev.khalil.services;
 
+import java.util.List;
+
 import dev.khalil.daos.AdminDAOS;
 import dev.khalil.entities.Admin;
 
 public class AdminServicesImpl  {
 	
-	AdminDAOS adaos = new AdminDAOS();
+	 static AdminDAOS adaos = new AdminDAOS();
     
 	public boolean signUp(String name, String userName, String password) {
 		Admin admin = new Admin(name, userName, password);
@@ -21,5 +23,16 @@ public class AdminServicesImpl  {
 		
 		
 	}
+	
+	
+	
+	public static List<String> getAllAdmin(){
+		
+		return adaos.getAllAdmins();
+	
+	} 
+	
+	
+	
 
 }

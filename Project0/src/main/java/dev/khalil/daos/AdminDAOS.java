@@ -1,13 +1,16 @@
 package dev.khalil.daos;
 
+import java.util.List;
 import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 import dev.khalil.entities.Admin;
+import dev.khalil.entities.User;
 
 public class AdminDAOS extends EmployeeDAOS {
 
@@ -58,6 +61,35 @@ public class AdminDAOS extends EmployeeDAOS {
 		
 		return null;
 	} 
+	
+	
+	
+	public List<String> getAllAdmins(){
+		
+		List<String> adminList = new ArrayList<String>();
+		
+		try {
+			
+			String sql = "select * from admins";
+			PreparedStatement ps = conn.prepareStatement(sql);
+			ResultSet rs = ps.executeQuery();
+			while(rs.next()) {
+				Admin admin = new Admin();
+				admin.setUserName(rs.getString("USERNAME"));
+				adminList.add(admin.getUserName());
+			
+			}
+			return adminList;
+			
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		
+		return null;
+		
+	}
 	
 
 }

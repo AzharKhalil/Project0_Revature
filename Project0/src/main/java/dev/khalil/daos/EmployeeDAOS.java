@@ -19,7 +19,6 @@ import dev.khalil.entities.User;
 public class EmployeeDAOS implements EmployeeDAOSInterface {
 
 	Connection conn = JDBCconnection.getConnection();
-	static Map<Integer, User> employee_list = new HashMap<Integer, User>();
 
 	public boolean signUp(User user) {
 		try {
@@ -36,11 +35,6 @@ public class EmployeeDAOS implements EmployeeDAOSInterface {
 
 		}
 		return false;
-	}
-
-	public Set<User> getAllEmployee() {
-		Set<User> user = new HashSet<User>(employee_list.values());
-		return user;
 	}
 
 	@Override
@@ -92,28 +86,60 @@ public class EmployeeDAOS implements EmployeeDAOSInterface {
 
 		return null;
 	}
-	
-	
+
 	public boolean deleteUser(String userName) {
-		
+
 		try {
-			
+
 			String sql = "delete users where username = ?";
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ps.setString(1, userName);
 			ps.executeQuery();
 			return true;
-			
-			
-			
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
+
 		return false;
 	}
-	
-	
-	
+
+	@Override
+	public boolean updateuserName(String puserName, String nuserName) {
+		// TODO Auto-generated method stub
+
+		try {
+
+			String sql = "update users set username=? where username = ?";
+			PreparedStatement ps = conn.prepareStatement(sql);
+			ps.setString(1, nuserName);
+			ps.setString(2, puserName);
+			ps.executeQuery();
+			return true;
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return false;
+
+	}
+
+	@Override
+	public boolean updatePassword(String userName, String pass) {
+		try {
+
+			String sql = "update users set password = ? where username = ?";
+			PreparedStatement ps = conn.prepareStatement(sql);
+			ps.setString(1, pass);
+			ps.setString(2, userName);
+			ps.executeQuery();
+			return true;
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
 
 }

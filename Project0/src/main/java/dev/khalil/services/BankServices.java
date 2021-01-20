@@ -54,6 +54,18 @@ public class BankServices {
 	
 	}
 	
+	public boolean deleteAccount(int accNum) {
+		return bdaos.deleteAccount(accNum);
+		
+	}
+
+	public boolean updatePin(int accNum, int pin) {
+		
+		
+		return bdaos.updatePin(accNum, pin);
+		
+	}
+
 	
 	
 

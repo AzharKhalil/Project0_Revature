@@ -10,5 +10,7 @@ public interface EmployeeServices {
 	User signIn(String userName, String password);
 	public List<User> getAllUsers();
 	public boolean deleteUser(String userName);
+	boolean updateuserName(String puserName, String nuserName);
+	boolean updatePassword(String userName, String pass);
 
 }

@@ -8,6 +8,14 @@ public class Admin {
 	private String password;
 	
 	
+	
+	public Admin() {
+		super();
+	}
+	
+	
+	
+	
 	public Admin(String name, String userName, String password) {
 		super();
 		this.name = name;

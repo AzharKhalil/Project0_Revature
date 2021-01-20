@@ -9,6 +9,7 @@ import dev.khalil.entities.User;
 import dev.khalil.exceptions.NotValidCharacter;
 import dev.khalil.exceptions.TooShortException;
 import dev.khalil.exceptions.UNAPValidaor;
+import dev.khalil.exceptions.UserAlreadyExists;
 import dev.khalil.services.AdminServicesImpl;
 import dev.khalil.services.BankServices;
 import dev.khalil.services.EmployeeServices;
@@ -62,42 +63,40 @@ public class App {
 					adminName = scan.next();
 					System.out.println("Enter Your User Name: ");
 					System.out.println("(* Shouldn't have space)");
-					String adminUserName;
-					adminUserName = scan.next();
-					System.out.println("Enter Your Password: ");
-					System.out.println("(* Shouldn't have space)");
-					System.out.println("(* At Least 8 characters)");
-					String adminPassword;
-					adminPassword = scan.next();
-
+					String adminUserName = scan.next();
 					try {
 
 						unapv.validUN(adminUserName);
-
-						try {
-							unapv.validPass(adminPassword);
-
-							boolean result = aserv.signUp(adminName, adminUserName, adminPassword);
-							if (result) {
-								System.out.println("Sucessfuly registered as admin");
-							} else {
-								System.out.println("Not Registered! Try Again");
-							}
-
-						} catch (TooShortException e) {
-							System.out.println("Password Too Short!");
-							System.out.println(e.getMessage() + " your password was " + e.length + " character long");
-
-						} catch (NotValidCharacter e) {
-							System.out.println("Password " + e.getMessage());
-						}
-
-					}  catch (NotValidCharacter e) {
+						unapv.adminUserNameAvailable(adminUserName);
+					} catch (NotValidCharacter e) {
 						System.out.println("User Name " + e.getMessage());
+						break;
+					} catch (UserAlreadyExists e) {
+						System.out.println(e.getMessage());
+						break;
 					}
 
-					// System.out.println("You have Sccessfuly Registered as admin :"+
-					// aserv.registerAdmin(adminName, adminUserName, adminPassword).getName());
+					System.out.println("Enter Your Password: ");
+					System.out.println("(* Shouldn't have space)");
+					System.out.println("(* At Least 8 characters)");
+					String adminPassword = scan.next();
+					try {
+						unapv.validPass(adminPassword);
+
+						boolean result = aserv.signUp(adminName, adminUserName, adminPassword);
+						if (result) {
+							System.out.println("Sucessfuly registered as admin");
+						} else {
+							System.out.println("Not Registered! Try Again");
+						}
+
+					} catch (TooShortException e) {
+						System.out.println("Password Too Short!");
+						System.out.println(e.getMessage() + " your password was " + e.length + " character long");
+						break;
+					} catch (NotValidCharacter e) {
+						System.out.println("Password can't contain space! ");
+					}
 					break;
 				}
 				case 2: {
@@ -107,6 +106,17 @@ public class App {
 					System.out.println("Enter Your User Name: ");
 					System.out.println("(* Shouldn't have space)");
 					String userName = scan.next();
+					try {
+
+						unapv.userUserNameAailable(userName);
+						unapv.validUN(userName);
+					} catch (NotValidCharacter e) {
+						System.out.println("User Name " + e.getMessage());
+					} catch (UserAlreadyExists e) {
+						System.out.println(e.getMessage());
+						break;
+					}
+
 					System.out.println("Enter a Password: ");
 					System.out.println("(* Shouldn't have space)");
 					System.out.println("(* At Least 8 characters)");
@@ -115,29 +125,21 @@ public class App {
 					//
 
 					try {
+						unapv.validPass(password);
 
-						unapv.validUN(userName);
-
-						try {
-							unapv.validPass(password);
-
-							boolean result = eserv.signUp(name, userName, password);
-							if (result) {
-								System.out.println("Successfuly Registered!");
-							} else {
-								System.out.println("Sorry");
-							}
-
-						} catch (TooShortException e) {
-							System.out.println("Password Too Short!");
-							System.out.println(e.getMessage() + " your password was " + e.length + " character long");
-
-						} catch (NotValidCharacter e) {
-							System.out.println("Password " + e.getMessage());
+						boolean result = eserv.signUp(name, userName, password);
+						if (result) {
+							System.out.println("Successfuly Registered!");
+						} else {
+							System.out.println("Sorry. Try Again!");
 						}
 
-					}  catch (NotValidCharacter e) {
-						System.out.println("User Name " + e.getMessage());
+					} catch (TooShortException e) {
+						System.out.println("Password Too Short!");
+						System.out.println(e.getMessage() + " your password was " + e.length + " character long");
+
+					} catch (NotValidCharacter e) {
+						System.out.println("Password " + e.getMessage());
 					}
 
 					//
@@ -146,6 +148,11 @@ public class App {
 					System.out.println("");
 					System.out.println("");
 					System.out.println("");
+
+					break;
+				}
+				default: {
+					System.out.println("Invalid Choice");
 				}
 
 				}
@@ -166,12 +173,12 @@ public class App {
 				switch (choice1) {
 				case 1: {
 
-					System.out.print("Enter Your Name:");
+					System.out.print("Enter Your Username:");
 					String userName = scan.next();
-					System.out.print("Enter your Password");
+					System.out.print("Enter your Password:");
 					String password = scan.next();
 					logedInAdmin = aserv.signIn(userName, password);
-					System.out.println("Welcome" + logedInAdmin.getName());
+					System.out.println("Welcome " + logedInAdmin.getName());
 					isLogedinAdmin = true;
 					break;
 				}
@@ -185,6 +192,10 @@ public class App {
 					System.out.println("Welcome! " + logedInUser.getName());
 					isLogedinUser = true;
 					break;
+				}
+
+				default: {
+					System.out.println("Invalid Choice");
 				}
 
 				}
@@ -217,11 +228,26 @@ public class App {
 					switch (choice) {
 					case 1: {
 						System.out.print("How much balance you want to open account with: ");
-						double balance;
-						balance = scan.nextDouble();
-						System.out.print("Select a PIN for Credit Card: ");
+						float balance;
+						balance = scan.nextFloat();
+
+						try {
+							unapv.validBalance(balance);
+						} catch (NotValidCharacter e) {
+							System.out.println("Balance Can't be Negative!");
+							break;
+						}
+
+						System.out.print("Select a 4 Digit PIN: ");
 						int pin;
 						pin = scan.nextInt();
+						try {
+							unapv.validPin(pin);
+						} catch (TooShortException e) {
+							System.out.println("PIN should be of 4 of digits Your PIN was " + e.length + " Long");
+							break;
+						}
+
 						int id = logedInUser.getUserID();
 						boolean response = bserv.createAccont(balance, pin, id);
 						if (response) {
@@ -229,6 +255,7 @@ public class App {
 						} else {
 							System.out.println("Could not Create Account.Try Again!");
 						}
+
 						break;
 					}
 
@@ -266,11 +293,15 @@ public class App {
 								System.out.println("Your Current Balance is: " + ba.getBalance());
 
 								System.out.print("Enter Amount to Deposit: ");
-								double amnt = scan.nextDouble();
+								float amnt = scan.nextFloat();
 								boolean tf = bserv.deposit(ba, amnt);
+
+								double balance = ba.getBalance() + amnt;
+								long round = Math.round(balance);
+
 								if (tf) {
 									System.out.println("Deposited into Account Number: " + ba.getBankId());
-									System.out.println("Your new Balance is: " + ba.getBalance() + amnt);
+									System.out.println("Your new Balance is: " + (round - amnt));
 								} else {
 									System.out.println("Sorry! Could not be Deposited. Try Again!");
 								}
@@ -295,14 +326,14 @@ public class App {
 
 							if (ba != null) {
 								System.out.println("Your Current Balance is: " + ba.getBalance());
-								System.out.print("Enter Amount to Withdraw");
-								double amnt = scan.nextDouble();
+								System.out.print("Enter Amount to Withdraw: ");
+								float amnt = scan.nextFloat();
 								if (amnt <= ba.getBalance()) {
 
 									boolean rslt = bserv.withdraw(ba, amnt);
 									if (rslt) {
 										System.out.println("WithDraw Successfuly!");
-										System.out.println("Your new Balance is: " + (ba.getBalance() - amnt));
+										System.out.println("Your new Balance is: " + ba.getBalance());
 									}
 								} else {
 									System.out.println("Sorry!You don't have enough money!");
@@ -310,16 +341,50 @@ public class App {
 
 							}
 
+							break;
+
+						}
+
+						case 4: {
+							System.out.println("Enter Account Number: ");
+							int accNum = scan.nextInt();
+							System.out.println("Enter Pin Number: ");
+							int pin = scan.nextInt();
+
+							int id = logedInUser.getUserID();
+							BankAccount ba = bserv.validateInformation(accNum, pin, id);
+							if (ba.getBalance() == 0) {
+
+								boolean rslt = bserv.deleteAccount(accNum);
+								if (rslt) {
+									System.out.println("Account Deleted!");
+								} else {
+									System.out.println("Sorry! Try Again");
+								}
+
+							} else {
+
+								System.out.println("Yo have $" + ba.getBalance() + " in your Account");
+								System.out.println("Please withdraw remaning balance before deleting!");
+
+							}
+							break;
+
 						}
 
 						}
 
 						break;
+
 					}
 
 					case 3: {
 						System.out.println("Signed Out!");
 						System.exit(0);
+					}
+
+					default: {
+						System.out.println("Invalid Choice");
 					}
 
 					}
@@ -360,6 +425,20 @@ public class App {
 						String name = scan.next();
 						System.out.print("Enter User UserName: ");
 						String userName = scan.next();
+						// Test
+
+						try {
+
+							unapv.userUserNameAailable(userName);
+							unapv.validUN(userName);
+						} catch (NotValidCharacter e) {
+							System.out.println("User Name " + e.getMessage());
+						} catch (UserAlreadyExists e) {
+							System.out.println(e.getMessage());
+							break;
+						}
+
+						// Test
 						System.out.print("Enter User Password: ");
 						String password;
 						password = scan.next();
@@ -374,7 +453,7 @@ public class App {
 					}
 
 					case 3: {
-						System.out.print("Enter UserName of user to Delete:");
+						System.out.print("Enter Username of user to Delete:");
 						String userName = scan.next();
 						eserv.deleteUser(userName);
 						System.out.println("User Deleted Sucessfuly!");
@@ -383,16 +462,99 @@ public class App {
 
 					case 4: {
 
-						System.out.print("UserName of User: ");
+						System.out.println("1: Update Username of user");
+						System.out.println("2: Update password of user");
+						System.out.println("3: Update 4-Digit PIN for Bank Account");
+						int decision = scan.nextInt();
+
+						switch (decision) {
+						case 1: {
+
+							System.out.println("Enter Current Username:");
+							String puserName = scan.next();
+							System.out.println("Enter New Username:");
+							String nuserName = scan.next();
+							//
+
+							try {
+
+								unapv.userUserNameAailable(nuserName);
+								unapv.validUN(nuserName);
+							} catch (NotValidCharacter e) {
+								System.out.println("User Name " + e.getMessage());
+							} catch (UserAlreadyExists e) {
+								System.out.println(e.getMessage());
+								break;
+							}
+
+							boolean result = eserv.updateuserName(puserName, nuserName);
+							if (result) {
+								System.out.println("Updated Successfuly");
+							} else {
+								System.out.println("Sorry! Try Again");
+							}
+
+							break;
+						}
+
+						case 2: {
+
+							System.out.println("Enter Username of user: ");
+							String userName = scan.next();
+							List<User> users = eserv.getAllUsers();
+							for (User user : users) {
+								if (user.getUserName().equals(userName)) {
+
+									System.out.println("Enter New Password:");
+									String pass = scan.next();
+									boolean result = eserv.updatePassword(userName, pass);
+									if (result) {
+										System.out.println("Password updated!");
+									} else {
+										System.out.println("Sorry!Try Again!");
+									}
+
+								}
+							}
+
+							break;
+						}
+
+						case 3: {
+
+							System.out.println("Enter Bank Account Number:");
+							int accNum = scan.nextInt();
+							System.out.println("Enter New 4-Digit PIN:");
+							int pin = scan.nextInt();
+							boolean result = bserv.updatePin(accNum, pin);
+							if (result) {
+								System.out.println("Updated PIN!");
+							} else {
+								System.out.println("Sorry! Try Again");
+							}
+
+							break;
+
+						}
+
+						default: {
+							break;
+						}
+						}
+
+						break;
 
 					}
 
 					case 5: {
 
-						System.out.println("successflly loggedout!");
+						System.out.println("Successflly loggedout!");
 						System.exit(0);
 						break;
 
+					}
+					default: {
+						System.out.println("Invalid Choice!");
 					}
 
 					}
@@ -403,8 +565,4 @@ public class App {
 		}
 	}
 
-	private static void swich(int choice) {
-		// TODO Auto-generated method stub
-
-	}
 }

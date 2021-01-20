@@ -19,9 +19,9 @@ public class BankAccount {
 
 
 
-	public BankAccount(double balance, int pin, int userId) {
+	public BankAccount(double balance, int pin2, int userId) {
 		this.balance = balance;
-		this.pin = pin;
+		this.pin = pin2;
 		this.userId = userId; 
 		
 	}
@@ -58,8 +58,8 @@ public class BankAccount {
 
 
 
-	public void setPin(int pin) {
-		this.pin = pin;
+	public void setPin(int i) {
+		this.pin = i;
 	}
 
 

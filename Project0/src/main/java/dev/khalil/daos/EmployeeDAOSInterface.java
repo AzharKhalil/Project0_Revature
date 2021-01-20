@@ -8,9 +8,10 @@ import dev.khalil.entities.User;
 public interface EmployeeDAOSInterface {
 	
 	boolean signUp(User user);
-	public Set<User> getAllEmployee();
 	public User signIn(User user); 
 	public List<User> getAllUsers();
 	public boolean deleteUser(String userName);
+	boolean updateuserName(String puserName, String nuserName);
+	boolean updatePassword(String userName, String pass);
 
 }

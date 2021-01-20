@@ -1,5 +1,6 @@
 package JDBC;
 
+import java.io.FileInputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.Properties;
@@ -7,6 +8,8 @@ import java.util.Properties;
 public class JDBCconnection {
 
 	private static Connection conn = null;
+	
+	static Properties pros = new Properties();
 	public static Connection getConnection() {
 		
 		Properties pros = new Properties();
@@ -17,6 +20,8 @@ public class JDBCconnection {
 				
 				Class.forName("oracle.jdbc.driver.OracleDriver");
 				
+				FileInputStream input = new FileInputStream(JDBCconnection.class.getClassLoader().getResource("connection.properties").getFile());
+				pros.load(input);
 				String url = pros.getProperty("url");
 				String username = pros.getProperty("userName");
 				String password = pros.getProperty("password");
@@ -39,6 +44,7 @@ public class JDBCconnection {
 	}
 	
 	public static void main(String[] args) {
-		System.out.println(getConnection());
+		//System.out.println(getConnection());
+		System.out.println(pros.getProperty("url"));
 	}
 }

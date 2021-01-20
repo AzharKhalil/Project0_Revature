@@ -94,48 +94,78 @@ public class BankAccountDAOS {
 
 		return null;
 	}
-	
-	
+
 	public boolean deposit(BankAccount ba) {
-		
+
 		try {
-			
+
 			String sql = "update bank_account set balance = ? where id = ?";
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ps.setString(1, Double.toString(ba.getBalance()));
 			ps.setString(2, Integer.toString(ba.getBankId()));
 			ps.executeQuery();
 			return true;
-			
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
-		
+
 		return false;
 	}
-	
-	
+
 	public boolean withdraw(BankAccount ba) {
-		
+
 		try {
-			
+
 			String sql = "update bank_account set balance = ? where id =? ";
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ps.setString(1, Double.toString(ba.getBalance()));
 			ps.setString(2, Integer.toString(ba.getBankId()));
 			ps.executeQuery();
 			return true;
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return false;
+
+	}
+
+	public boolean deleteAccount(int accNum) {
+
+		try {
+			String sql = "delete bank_account where id = ?";
+			PreparedStatement ps = conn.prepareStatement(sql);
+			ps.setString(1, Integer.toString(accNum));
+			ps.executeQuery();
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return false;
+	}
+
+	public boolean updatePin(int accNum, int pin) {
+	
+		try {
+			String sql = "update bank_account set pin = ? where id = ?";
+			PreparedStatement ps = conn.prepareStatement(sql);
+			ps.setString(1, Integer.toString(pin));
+			ps.setString(2, Integer.toString(accNum));
+			ps.executeQuery();
+			return true;
+			
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		
 		
-		return false;
 		
+		
+		return false;
 	}
-	
-	
 
 }

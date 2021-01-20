@@ -37,4 +37,18 @@ public class EmployeeServicesImpl implements EmployeeServices {
 		return false;
 	}
 
+	@Override
+	public boolean updateuserName(String puserName, String nuserName) {
+		
+	return edao.updateuserName(puserName, nuserName);
+		
+		
+	}
+
+	@Override
+	public boolean updatePassword(String userName, String pass) {
+		 return edao.updatePassword(userName, pass);
+	
+	}
+
 }

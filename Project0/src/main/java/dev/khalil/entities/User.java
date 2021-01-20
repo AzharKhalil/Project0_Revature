@@ -94,7 +94,7 @@ public class User {
 
 	@Override
 	public String toString() {
-		return "[Name=" + name + ", UserName=" + userName + ", User ID=" + userID + ", Balance=" + balance + "]";
+		return "[Name=" + name + ", UserName=" + userName + ", User ID=" + userID + "]";
 	}
 
 
